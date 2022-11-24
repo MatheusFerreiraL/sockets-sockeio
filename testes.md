@@ -1,6 +1,6 @@
 TESTE:
 
-CADASTRAR NOVA VENDA: 002,Cesar,1,21-11-2022,2000
+CADASTRAR NOVA VENDA: 1,Matheus,2,21-11-2022,2000
 
 ----------------------------------
 

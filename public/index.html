@@ -11,39 +11,40 @@
   </head>
   <body>
     <form id="chat">
-      <input type="text" name="username" placeholder="Digite o usuario">
+      <input type="text" name="username" placeholder="Digite o usuario" />
       <div class="messages"></div>
-      <input type="text" name="message" placeholder="Digite a mensagem">
+      <input type="text" name="message" placeholder="Digite a mensagem" />
       <button type="submit">Enviar</button>
     </form>
 
-
     <script type="text/javascript">
-      const socket = io('http://localhost:8000');
+      const socket = io("http://localhost:8000");
 
       function renderMessage(message) {
-        $('.messages').append(`<div class="message"><strong>${message.author}</strong>: ${message.message}</div>`);
-      };
+        $(".messages").append(
+          `<div class="message"><strong>${message.author}</strong>: ${message.message}</div>`
+        );
+      }
 
-      socket.on('receivedMessage', function(message){
-        console.log(message)
+      socket.on("receivedMessage", function (message) {
+        console.log(message);
         renderMessage(message);
       });
 
-      $('#chat').submit(function(e) {
+      $("#chat").submit(function (e) {
         e.preventDefault();
-        
-        const author = $('input[name=username]').val();
-        const message = $('input[name=message]').val();
+
+        const author = $("input[name=username]").val();
+        const message = $("input[name=message]").val();
 
         if (author && message) {
           const messageObject = {
             author,
-            message
+            message,
           };
 
           renderMessage(messageObject);
-          socket.emit('sendMessage', messageObject);
+          socket.emit("sendMessage", messageObject);
         }
       });
     </script>
