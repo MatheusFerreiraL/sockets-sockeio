@@ -46,9 +46,33 @@ io.on("connection", socket => {
   });
 });
 
-async function handleManager(data, verifyDate) {
+async function handleSeller(data) {
   const { message } = data;
-  const untreatedData = message.split(":");
+  const untreatedData = message.split(",");
+
+  if (untreatedData.length !== 5) {
+    return false;
+  }
+  const [cod_op, nome_vendedor, id_loja, data_venda, valor_venda] =
+    untreatedData;
+
+  try {
+    const query = `INSERT INTO principal (cod_op, nome_vendedor, id_loja, data_venda, valor_venda) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+    const values = [cod_op, nome_vendedor, id_loja, data_venda, valor_venda];
+
+    const { rowCount } = await pool.query(query, values);
+
+    if (rowCount <= 0) return false;
+  } catch (error) {
+    console.log(error.message);
+    return false;
+  }
+  return true;
+}
+
+async function handleManager(data) {
+  const { message } = data;
+  const untreatedData = message.split(",");
 
   const [op, value, date] = untreatedData;
 
@@ -59,12 +83,16 @@ async function handleManager(data, verifyDate) {
     case "2":
       const response2 = await handleDatabase(value, Number(op), "id_loja");
       return response2;
-    case "3": // ==> ERRO: é retornado um array de objetos, conflito na hora de renderizar no front
-      const query =
-        "SELECT * FROM principal WHERE CAST(data_venda AS TIMESTAMP) >= $1 AND CAST(data_venda AS TIMESTAMP) <= $2;";
+    case "3":
+      const query = `SELECT COUNT(*) FROM principal WHERE CAST(data_venda AS TIMESTAMP) >= $1 
+        AND CAST(data_venda AS TIMESTAMP) <= $2;`;
       const { rows, rowCount } = await pool.query(query, [value, date]);
 
-      return { status: false, resp: rows };
+      if (rowCount <= 0) return { status: false, resp: null };
+      return {
+        status: true,
+        resp: `No período de ${value} a ${date} foram vendido(s) ${rows[0].count} produtos na rede.`,
+      };
     case "4":
       const response3 = await handleTheBest("nome_vendedor");
       response3.resp = `O(A) melhor vendodor(a) é ${response3.resp}`;
@@ -74,7 +102,7 @@ async function handleManager(data, verifyDate) {
       response4.resp = `A melhor loja é a de Id ${response4.resp}`;
       return response4;
     default:
-      return { status: false, resp: 'Erro Default' };
+      return { status: false, resp: "Erro Default" };
   }
 }
 
@@ -108,7 +136,7 @@ async function handleDatabase(data, op, register) {
     if (rowCount <= 0) return response;
 
     if (op === 1) {
-      response.resp = `${rows[0].nome_vendedor} vendeu ${rowCount} produtos`;
+      response.resp = `${rows[0].nome_vendedor} vendeu ${rowCount} produto(s)`;
       response.status = true;
     } else if (op === 2) {
       response.resp = `A loja de Id ${rows[0].id_loja} vendeu ${rowCount} produtos`;
@@ -120,30 +148,6 @@ async function handleDatabase(data, op, register) {
     console.log(error.message);
     return response;
   }
-}
-
-async function handleSeller(data) {
-  const { message } = data;
-  const untreatedData = message.split(",");
-
-  if (untreatedData.length !== 5) {
-    return false;
-  }
-  const [cod_op, nome_vendedor, id_loja, data_venda, valor_venda] =
-    untreatedData;
-
-  try {
-    const query = `INSERT INTO principal (cod_op, nome_vendedor, id_loja, data_venda, valor_venda) VALUES ($1, $2, $3, $4, $5) RETURNING *`;
-    const values = [cod_op, nome_vendedor, id_loja, data_venda, valor_venda];
-
-    const { rowCount } = await pool.query(query, values);
-
-    if (rowCount <= 0) return false;
-  } catch (error) {
-    console.log(error.message);
-    return false;
-  }
-  return true;
 }
 
 server.listen(PORTA, console.log(`Server running on port ${PORTA}`));
