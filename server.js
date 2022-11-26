@@ -39,9 +39,11 @@ io.on("connection", socket => {
         }
         socket.emit("receivedMessage", { author, message: "OK" });
         break;
-      default:
-        console.log("ERROR");
+      case !"Vendedor" && !"Gerente":
         socket.emit("receivedMessage", "ERROR");
+        break;
+      default:
+        socket.emit("receivedMessage", { author, message:"ERROR" });
     }
   });
 });
@@ -95,7 +97,7 @@ async function handleManager(data) {
       };
     case "4":
       const response3 = await handleTheBest("nome_vendedor");
-      response3.resp = `O(A) melhor vendodor(a) é ${response3.resp}`;
+      response3.resp = `O(A) melhor vendedor(a) é ${response3.resp}`;
       return response3;
     case "5":
       const response4 = await handleTheBest("id_loja");
