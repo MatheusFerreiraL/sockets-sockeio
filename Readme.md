@@ -109,3 +109,10 @@ Exemplo de entrada:
 5. Melhor loja: `5`;
 
 Todas as resposta do servidor, tanto quando se trata do vendedor quanto do gerente, se houverem qualquer erro terão como resposta 'ERRO'. 
+
+## Equipe
+
+1. César Rafael Goes Vasconcelos Almeida Souza - RA: 1272118044
+2. João Victor Moura Brandão - RA: 1272123051
+3. Matheus Ferreira Leandro - RA: 1272122546
+4. Pedro Henrique de Araújo Ribeiro - RA: 1272122069
