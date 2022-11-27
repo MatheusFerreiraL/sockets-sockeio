@@ -12,7 +12,7 @@ Para verificar se a instalação ocorreu corretamente deverá usar o comando ```
 ### Postgres
 
 
-No caso do windows, a instalação deverá ser feita <a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads">através deste link</a>. O setup do instalador deve seguir as diretrizes que seguem:
+No caso do windows, a instalação deverá ser feita <a href="https://www.enterprisedb.com/downloads/postgres-postgresql-downloads">através deste link</a>. O setup do instalador deve seguir as diretrizes que abaixo:
 
 - Componentes selecionados: PostgreSQL Server e Command Line Tools;
 - Diretório: padrão do disco C;
@@ -25,7 +25,7 @@ Isso feito, está concluído a instalação do Postgres para windows.
 
 Para o Linux, as instrução de instalação para cada Distro estão <a href="https://www.postgresql.org/download/">neste link.</a>
 
-Uma vez que a instalação tenha sido concluída, no terminal, digite os comandos: 
+Uma vez que a instalação tenha sido concluída, no terminal, digite os comandos:  (SOMENTE necessários para Linux)
 ``` 
 sudo -u postgres psql postgres
 ```
@@ -55,7 +55,7 @@ O projeto conta com os seguintes arquivos:
 
 - `.gitignore`;
 - `package.json`: contém os pacotes e dependências necessários para executar o projeto;
-- `dump.sql`: contém os códigos SQL para criação do banco de dados e da tabela principal que será usado no decorrer do projeto; 
+- `dump.sql`: contém os códigos SQL para criação do banco de dados e da tabela principal que será usado no decorrer do projeto (os comando contidos nesse arquivo devem ser executados,um por um, na ordem em que estão dispostas no arquivo. Se houver preferência pela execucação via terminal, deverá, ainda assim, seguir a mesma ordem); 
 - `connection.js`: arquivo com as configurações de conexão da aplicação com o banco de dados: 
 
 ```json
@@ -84,3 +84,28 @@ A mensagem `Server running on port 8000` deve aparecer no terminal.
 Acesso o navegador passando a URL: http://localhost:8000
 
 ## Comandos padrão do projeto
+
+Para execução do comando previsto para o <strong>vendedor</strong>, no input "usuário", deverá ser digitado `Vendedor`.
+### Conteúdo da mensagem de venda (Vendedor):
+- Código da operação: `1` (do tipo Integer);
+- Nome do vendedor: nome qualquer (tipo String);
+- Identificação da loja (ID): deve ser um número (tipo Integer);
+- Data da venda: deve seguir o formato `dd-MM-yyyy` (e.g.: 01-01-2023);
+- Valor vendido: número qualquer (Integer ou Float);
+
+<strong>Todos os dados devem ser separados por vírgula `,` sem espaçamento entre um e outro. Códigos case sensitive.</strong>
+
+Exemplo de entrada:
+```
+1,Luis,6,01-01-2023,31
+```
+### Conteúdo da mensagem de consulta (Gerente):
+<strong>Todos os dados devem ser separados por vírgula `,` sem espaçamento entre um e outro.Códigos case sensitive.</strong>
+
+1. Total de vendas de um vendedor: `1,Luis`;
+2. Total de vendas de uma loja: `2,6`;
+3. Total de vendas de uma loja: `3,29-11-2022,01-01-2023`;
+4. Melhor vendedor: `4`;
+5. Melhor loja: `5`;
+
+Todas as resposta do servidor, tanto quando se trata do vendedor quanto do gerente, se houverem qualquer erro terão como resposta 'ERRO'. 

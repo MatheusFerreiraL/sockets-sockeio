@@ -7,7 +7,7 @@ const app = express();
 const server = require("http").createServer(app);
 const io = require("socket.io")(server);
 
-app.use(express.static(path.join(__dirname, "public"))); // <-- front-end files
+app.use(express.static(path.join(__dirname, "public")));
 app.set("views", path.join(__dirname, "public"));
 app.engine("html", require("ejs").renderFile);
 app.set("view engine", "html");
@@ -16,14 +16,14 @@ app.get("/", (req, res) => {
   res.render("index.html");
 });
 
-const author = "Server";
+const author = "SERVER";
 io.on("connection", socket => {
   //o que será feito toda vez que um novo usuário se conectar
   console.log(`Socket conectado: ${socket.id}`);
 
   socket.on("sendMessage", async data => {
     switch (data.author) {
-      case "Gerente":
+      case "GERENTE":
         const flagManager = await handleManager(data);
         if (!flagManager.status) {
           socket.emit("receivedMessage", { author, message: "ERROR" });
@@ -31,7 +31,7 @@ io.on("connection", socket => {
         }
         socket.emit("receivedMessage", { author, message: flagManager.resp });
         break;
-      case "Vendedor":
+      case "VENDEDOR":
         const flag = await handleSeller(data);
         if (!flag) {
           socket.emit("receivedMessage", { author, message: "ERROR" });
